@@ -1,5 +1,7 @@
+import java.io.FileReader;
 import java.lang.Math;
 import java.util.*;
+import java.util.Arrays;
 
 /* Done by: Negib Sherif
  * Assignment 4
@@ -9,6 +11,48 @@ import java.util.*;
 public class Queens2
 {
     private static int boardSize = 12;
+
+    /**  
+    * Gets index of maximum number in an array
+    * @param Integer array that will be iterated through to find the maximum number
+    * @return the index of the maximum number in the array
+    */ 
+    private static int getMaxIndex (Integer[] array)
+    {
+        // the maximum value in the array to be calculated
+        int max = 0;
+
+        // the index value in the array to be calculated
+        int index = 0;
+
+        // Iterate through array to find the maximum element
+        for (int i = 0; i < array.length; i++){
+            // Check if current element in array is the maximum seen so far. 
+            // Update max and index values if element is the maximum seen so far.  
+            if (array[i] > max){
+                max = array[i];
+                index = i;
+            }
+        }
+        return index; 
+    }
+
+    /**  
+    * Gets hamming distance between two members of a population
+    * @param 
+    * @return 
+    */ 
+    private static int getHammingDistance (Integer[] member, Integer[] fittest_member)
+    {
+        // the hamming distance to be calculated
+        int hamming_distance = 0;
+        for (int i = 0; i < member.length; i++){
+            if (member[i] != fittest_member[i]){
+                hamming_distance +=1;
+            }
+        }
+        return hamming_distance; 
+    }
     
     // ************************************************************************
     // ************ A. GENETIC DIVERSITY - CALCULATE MEAN HAMMING DISTANCE ****
@@ -27,18 +71,31 @@ public class Queens2
      * in the event of there being two or more genotypes with the highest fitness,
      * you can choose any of those genotypes as the "fittest member"
      */
+
+     
     public static double meanHamming(Integer[][] population)
     {
+        int population_size = population.length;
+        double cumulative_hamming_distance = 0;
+
     	// the mean hamming distance to be calculated
     	double distance = 0.0;
-    	
-    	// knowing the fitness of each member of the population will be useful!
+
+        // getting the fitness of each member in the population
     	Integer[] fitnesses = getFitnesses(population);
+        
+        // getting the index of the fittest member in the population
+        int fittnest_member_index = getMaxIndex(fitnesses);
     	
-    	// YOUR CODE GOES HERE
+        // iterate through all the members in the population
+        for (int i = 0; i < population.length; i++){
+            if (i!=fittnest_member_index){
+                cumulative_hamming_distance += getHammingDistance(population[i], population[fittnest_member_index]);
+            }
+        }
         
-        // END OF YOUR CODE
-        
+        distance = cumulative_hamming_distance / (population_size -1);
+           
         return distance;
     }
     

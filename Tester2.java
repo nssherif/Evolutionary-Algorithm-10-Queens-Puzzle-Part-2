@@ -44,109 +44,109 @@ public class Tester2
         }
 
         
-        // TEST B: choose unique random competitors
-        int tournamentSize;
-        System.out.println("\nB. Testing Competitor Choosing:");
-        try
-        {
-        	for (int index = 0; index < 5; index ++)
-        	{
-        		popSize = 10 + 10*((int)(Math.random() * 4));
-        		tournamentSize = 3 + (int)(Math.random() * 2);
-        		System.out.println("\nRun " + index + ": Population size = "
-        					+ popSize + ", tournament size = " + tournamentSize);
-        		System.out.print("Competitors chosen: ");
-        		Integer[] competitors = Queens2.chooseCompetitors(popSize, 	tournamentSize);
-        		printArray(competitors);
-        	}
-        }
-        catch (Exception ex)
-        {
-           System.out.println("\n ! competitor choosing code caused an exception !");
-        }
+        // // TEST B: choose unique random competitors
+        // int tournamentSize;
+        // System.out.println("\nB. Testing Competitor Choosing:");
+        // try
+        // {
+        // 	for (int index = 0; index < 5; index ++)
+        // 	{
+        // 		popSize = 10 + 10*((int)(Math.random() * 4));
+        // 		tournamentSize = 3 + (int)(Math.random() * 2);
+        // 		System.out.println("\nRun " + index + ": Population size = "
+        // 					+ popSize + ", tournament size = " + tournamentSize);
+        // 		System.out.print("Competitors chosen: ");
+        // 		Integer[] competitors = Queens2.chooseCompetitors(popSize, 	tournamentSize);
+        // 		printArray(competitors);
+        // 	}
+        // }
+        // catch (Exception ex)
+        // {
+        //    System.out.println("\n ! competitor choosing code caused an exception !");
+        // }
         
-        // TEST C: select best competitor from a set of competitors
-        popSize = 100;
-        tournamentSize = 5;
-        Integer [][] population2 = createTestPopulation(popSize, false);
+        // // TEST C: select best competitor from a set of competitors
+        // popSize = 100;
+        // tournamentSize = 5;
+        // Integer [][] population2 = createTestPopulation(popSize, false);
         
-        // hardcoded chosen set (avoids double-jeopardy if code for B is broken)
-        Integer [] chosen = new Integer[]{2,4,6,8,10};
+        // // hardcoded chosen set (avoids double-jeopardy if code for B is broken)
+        // Integer [] chosen = new Integer[]{2,4,6,8,10};
         
-        System.out.println("\nC. Testing Parent Selection:");
-        try
-        {
-        	int parent = Queens2.selectParent(chosen, population2);
-        	System.out.println("\nTournament of size 5 from population of size 100.");
-        	System.out.println("\nThe 5 chosen competitors have these fitnesses:");
-        	for (int index = 0; index < 5; index ++)
-        	{
-        		Integer [] thisGeno = population2[chosen[index]];
-        		System.out.println("Population Member #" + chosen[index] +
-        		" has fitness = " + Queens.fitness(thisGeno));
-        	}
+        // System.out.println("\nC. Testing Parent Selection:");
+        // try
+        // {
+        // 	int parent = Queens2.selectParent(chosen, population2);
+        // 	System.out.println("\nTournament of size 5 from population of size 100.");
+        // 	System.out.println("\nThe 5 chosen competitors have these fitnesses:");
+        // 	for (int index = 0; index < 5; index ++)
+        // 	{
+        // 		Integer [] thisGeno = population2[chosen[index]];
+        // 		System.out.println("Population Member #" + chosen[index] +
+        // 		" has fitness = " + Queens.fitness(thisGeno));
+        // 	}
         
-        	System.out.println("\nThe competitor selected to be a parent is: #" + parent);
-        }
-        catch (Exception ex)
-        {
-           System.out.println("\n ! parent selection code caused an exception !");
-        }
+        // 	System.out.println("\nThe competitor selected to be a parent is: #" + parent);
+        // }
+        // catch (Exception ex)
+        // {
+        //    System.out.println("\n ! parent selection code caused an exception !");
+        // }
                 
-        // TEST D: perform (μ, λ) survivor selection (replace population with best children)
-        // Initialize population
-        popSize = 10;
-        Integer [][] population3 = new Integer [popSize][boardSize];
+        // // TEST D: perform (μ, λ) survivor selection (replace population with best children)
+        // // Initialize population
+        // popSize = 10;
+        // Integer [][] population3 = new Integer [popSize][boardSize];
         
-        System.out.println("\nD. Testing (μ, λ) Survivor Selection:");
-        try
-        {
-        	// create random population of children
-        	System.out.println("\nPool of 20 Children to select from:");
-        	Integer [][] children = createTestPopulation(popSize * 2, true);
+        // System.out.println("\nD. Testing (μ, λ) Survivor Selection:");
+        // try
+        // {
+        // 	// create random population of children
+        // 	System.out.println("\nPool of 20 Children to select from:");
+        // 	Integer [][] children = createTestPopulation(popSize * 2, true);
         
-       		population3 = Queens2.survivorSelection(children, popSize);
+       	// 	population3 = Queens2.survivorSelection(children, popSize);
         
-        	System.out.println("\nFittest 10 children selected to form the new population:");
-        	for (int index = 0; index < popSize; index ++)
-        	{
-         	   System.out.print(index + ": Fitness: " + Queens.fitness(population3[index]) + ", Genotype: ");
-         	   printArray(population3[index]);
-        	}
-        }
-        catch (Exception ex)
-        {
-           System.out.println("\n ! survivor selection code caused an exception !");
-        }
+        // 	System.out.println("\nFittest 10 children selected to form the new population:");
+        // 	for (int index = 0; index < popSize; index ++)
+        // 	{
+        //  	   System.out.print(index + ": Fitness: " + Queens.fitness(population3[index]) + ", Genotype: ");
+        //  	   printArray(population3[index]);
+        // 	}
+        // }
+        // catch (Exception ex)
+        // {
+        //    System.out.println("\n ! survivor selection code caused an exception !");
+        // }
         
         
-        // TEST E: perform scramble mutation on the population
-        // create a new population to test
-        popSize = 5;
-        Integer [][] population4 = new Integer [popSize][boardSize];
-        population4 [0] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        population4 [1] = new Integer[]{ 9, 5, 6, 11, 10, 8, 7, 12, 1, 3, 2, 4 };
-        population4 [2] = new Integer[]{ 9, 4, 3, 1, 2, 11, 5, 10, 12, 7, 8, 6 };
-        population4 [3] = new Integer[]{ 7, 12, 8, 9, 1, 10, 2, 3, 4, 5, 6, 11 };
-        population4 [4] = new Integer[]{ 10, 6, 4, 2, 8, 11, 5, 12, 9, 1, 3, 7 };
+        // // TEST E: perform scramble mutation on the population
+        // // create a new population to test
+        // popSize = 5;
+        // Integer [][] population4 = new Integer [popSize][boardSize];
+        // population4 [0] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+        // population4 [1] = new Integer[]{ 9, 5, 6, 11, 10, 8, 7, 12, 1, 3, 2, 4 };
+        // population4 [2] = new Integer[]{ 9, 4, 3, 1, 2, 11, 5, 10, 12, 7, 8, 6 };
+        // population4 [3] = new Integer[]{ 7, 12, 8, 9, 1, 10, 2, 3, 4, 5, 6, 11 };
+        // population4 [4] = new Integer[]{ 10, 6, 4, 2, 8, 11, 5, 12, 9, 1, 3, 7 };
         
-        System.out.println("\nE. Testing scramble mutation: (60% rate) ");
-        try
-        {
-        	for (int index = 0; index < popSize; index ++)
-        	{
-        	    System.out.print(index + ". Before: ");
-        	    printArray( population4[index]);
-       	     population1 [index] = Queens2.scrambleMutate(population4[index], 0.6);
-            	System.out.print("   After:  ");
-            	printArray( population1[index]);
-            	System.out.println();
-        	}
-        }
-        catch (Exception ex)
-        {
-           System.out.println("\n ! scramble mutation code caused an exception !");
-        }
+        // System.out.println("\nE. Testing scramble mutation: (60% rate) ");
+        // try
+        // {
+        // 	for (int index = 0; index < popSize; index ++)
+        // 	{
+        // 	    System.out.print(index + ". Before: ");
+        // 	    printArray( population4[index]);
+       	//      population1 [index] = Queens2.scrambleMutate(population4[index], 0.6);
+        //     	System.out.print("   After:  ");
+        //     	printArray( population1[index]);
+        //     	System.out.println();
+        // 	}
+        // }
+        // catch (Exception ex)
+        // {
+        //    System.out.println("\n ! scramble mutation code caused an exception !");
+        // }
         
         System.out.println("END OF TESTING\n\n");
 	}
