@@ -39,14 +39,18 @@ public class Queens2
 
     /**  
     * Gets hamming distance between two members of a population
-    * @param 
-    * @return 
+    * @param Integer array containing all the genes of the fittest member
+    * @param Integer array containing all the genes of the a member in the population
+    * @return the hamming distance which is total number of differences between corresponding genes values.
     */ 
     private static int getHammingDistance (Integer[] member, Integer[] fittest_member)
     {
         // the hamming distance to be calculated
         int hamming_distance = 0;
+
+        // Iterate through all the elements in a member of the population
         for (int i = 0; i < member.length; i++){
+            // Increment hamming distance if corresponding gene values are different
             if (member[i] != fittest_member[i]){
                 hamming_distance +=1;
             }
@@ -71,8 +75,6 @@ public class Queens2
      * in the event of there being two or more genotypes with the highest fitness,
      * you can choose any of those genotypes as the "fittest member"
      */
-
-     
     public static double meanHamming(Integer[][] population)
     {
         int population_size = population.length;
@@ -95,7 +97,7 @@ public class Queens2
         }
         
         distance = cumulative_hamming_distance / (population_size -1);
-           
+
         return distance;
     }
     
