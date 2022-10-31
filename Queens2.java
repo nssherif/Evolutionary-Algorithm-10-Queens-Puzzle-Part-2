@@ -33,6 +33,10 @@ public class Queens2
                 max = array[i];
                 index = i;
             }
+            // If current element is the same as max, then choose one of them at random. 
+            if (array[i] == max){
+                index = new Random().nextBoolean() ? i : index;
+            }
         }
         return index; 
     }
@@ -119,15 +123,23 @@ public class Queens2
     public static Integer[] chooseCompetitors(int populationSize, int tournamentSize)
     {
     	Integer[] competitors = new Integer[tournamentSize];
-    	
-    	// YOUR CODE GOES HERE
-        // DUMMY CODE TO REMOVE:
-        for (int index = 0; index < tournamentSize; index ++)
-        {
-        	competitors[index] = -1;
+
+        ArrayList<Integer> list = new ArrayList<Integer>();
+
+        // Add all numbers from 0 to populationSize-1
+        for (int i=0; i<populationSize; i++) {
+            list.add(i);
         }
-        // END OF YOUR CODE
-        
+
+        // Suffle all elements in the list to account for the randomization
+        Collections.shuffle(list);
+    	
+    	// Takes the first three indeces from list as the competitors
+        for (int i = 0; i < tournamentSize; i++)
+        {
+        	competitors[i] = list.get(i);
+        }
+       
         return competitors;
     }
     
@@ -157,15 +169,35 @@ public class Queens2
     public static int selectParent(Integer[] competitors, Integer[][] population)
     {
     	int bestCompetitor = 0;
-    	
-    	// YOUR CODE GOES HERE
-    	
-    	//DUMMY CODE
-    	bestCompetitor = -1;
-    	
-        // END OF YOUR CODE
+
+        Integer[][] competitorsPopulation = new Integer[competitors.length][population.length];
+
+        for (int i = 0; i < competitors.length; i++){
+            competitorsPopulation[i] = population[competitors[i]];
+        }
+
+        // getting the fitness of each member in the population
+    	Integer[] fitnesses = getFitnesses(competitorsPopulation);
+
+        // getting the index of the fittest member in the population
+        int fittnest_member_index = getMaxIndex(fitnesses);
+
+        bestCompetitor = competitors[fittnest_member_index];
     	
     	return bestCompetitor;
+    }
+
+    private static Integer[] removeElementFromArray (Integer[] array, int index)
+    {
+        Integer[] copy = new Integer[array.length - 1];
+
+        for (int i = 0, j = 0; i < array.length; i++) {
+            if (i != index) {
+                copy[j++] = array[i];
+            }
+        }
+
+        return copy;
     }
     
     
@@ -181,21 +213,26 @@ public class Queens2
     public static Integer[][] survivorSelection(Integer[][] children, int n)
     {
         Integer [][] newPopulation = new Integer [n][boardSize];
+
+        // getting the fitness of each member in the population
+    	Integer[] fitnesses = getFitnesses(children);
         
-        // YOUR CODE GOES HERE
-        // DUMMY CODE TO REMOVE:
-        newPopulation [0] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        newPopulation [1] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        newPopulation [2] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        newPopulation [3] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        newPopulation [4] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        newPopulation [5] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        newPopulation [6] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        newPopulation [7] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        newPopulation [8] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        newPopulation [9] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        // END OF YOUR CODE
-        
+        // Find the top n fittest individuals by using the getMaxIndex function where we reset the maximum fitness number when we find it. 
+        for (int i = 0; i < n ; i++) {
+            // getting the index of the fittest member in the population
+            int fittnest_member_index = getMaxIndex(fitnesses);
+            // Setting the value to 0 if it is the maximum index
+            fitnesses[fittnest_member_index] = 0;
+        }
+
+        // Populating population by seeing where the maximum fitted individuals are located (have a value 0 in the fitness array).
+        for (int i = 0, j=0; i < fitnesses.length ; i++) {
+            if (fitnesses[i] == 0) {
+                newPopulation[j] = children[i];
+                j++;
+            }
+        }
+
         return newPopulation;
     }
     
