@@ -3,6 +3,8 @@ import java.lang.Math;
 import java.util.*;
 import java.util.Arrays;
 
+import org.w3c.dom.events.MutationEvent;
+
 /* Done by: Negib Sherif
  * Assignment 4
  * Due date: Nov 11, 2022
@@ -186,19 +188,6 @@ public class Queens2
     	
     	return bestCompetitor;
     }
-
-    private static Integer[] removeElementFromArray (Integer[] array, int index)
-    {
-        Integer[] copy = new Integer[array.length - 1];
-
-        for (int i = 0, j = 0; i < array.length; i++) {
-            if (i != index) {
-                copy[j++] = array[i];
-            }
-        }
-
-        return copy;
-    }
     
     
     // ************************************************************************
@@ -236,6 +225,36 @@ public class Queens2
         return newPopulation;
     }
     
+    private static Integer[] binaryArrayFiller (int probability)
+    {
+        Integer [] randomBinaryInts = new Integer[] {0,0,0,0,0,0,0,0,0,0};
+        // Fill randomBinaryInts with as many ones as the probablility. 
+        // For example if p = 0.8, then randomBinaryInts becomes 8 ones and two zeros. 
+        for (int i = 0 ; i < probability ; i++) {
+            randomBinaryInts[i] = 1;
+        }
+        return randomBinaryInts;
+    }
+
+    private static Integer[] swapArray (Integer[] array)
+    {
+        Random r = new Random();
+        // Using Fisher–Yates shuffle Algorithm
+        // Start from the last element and swap one by one. We don't
+        // need to run for the first element that's why i > 0
+        for (int i = array.length-1; i > 0; i--) {
+             
+            // Pick a random index from 0 to i
+            int j = r.nextInt(i+1);
+             
+            // Swap arr[i] with the element at random index
+            int temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        return array;
+    }
+
     // ************************************************************************
     // ************ E.  SCRAMBLE MUTATION ************************************
     // ************************************************************************
@@ -245,11 +264,73 @@ public class Queens2
      */
     public static Integer[] scrambleMutate(Integer[] genotype, double p)
     {
-    	// YOUR CODE GOES HERE
+        int probability = (int)Math.round(p*10);
+    	Integer[] randomBinaryInts = binaryArrayFiller(probability);
+        Random r = new Random();
+        int randomNum = r.nextInt(randomBinaryInts.length);
+        // Select a random number from the binary ints array and dont mutate if selected nubmer is 0
+        if (randomBinaryInts[randomNum] == 0) 
+        {
+            return genotype;
+        }
+        
+
+        ArrayList<Integer> indeces = new ArrayList<Integer>();
+
+        // Add all numbers from 0 to populationSize-1
+        for (int i=0; i<genotype.length; i++) {
+            indeces.add(i);
+        }
+
+        // Suffle all elements in the list to account for the randomization
+        Collections.shuffle(indeces);
+
+        int first_rand_index = indeces.get(0);
+        int second_rand_index = indeces.get(1);
+        int lesser_index = 0;
+        int greater_index = 0;
+
+        // Seperate between the index that shows up first and second in the array
+        if (first_rand_index < second_rand_index) {
+            lesser_index = first_rand_index;
+            greater_index = second_rand_index;
+        }
+        else{
+            lesser_index = second_rand_index;
+            greater_index = first_rand_index;
+        }
+
+        // Placeholder array for all the elements in the genotype that will be scrambled
+        Integer[] array_to_scramble = new Integer[greater_index - lesser_index+1];
+        // Placeholder array for all the scrambeled elements
+        Integer[] scrambled_array = new Integer[greater_index - lesser_index+1];
+        // Placeholder array that contains scrambeled elements and the elements from the genotype that haven't been scrambeled
+        Integer[] mutated_array = new Integer[genotype.length];
+
+        // Copy over all the elements to scramble
+        for (int i=lesser_index, j=0; i<=greater_index; i++) {
+            array_to_scramble[j] = genotype[i];
+            j++;
+        }
+
+        scrambled_array = swapArray(array_to_scramble);
+
+        // Copy all elements in the genotype that aren't between the indeces to be scrambeled. 
+        // For all the indeces to be scrambeled, copy the scrambeled elements from the scrambeled array.  
+        for (int i=0, j=0; i<genotype.length; i++){
+            if (i<lesser_index) {
+                mutated_array[i] = genotype[i];
+            }
+            else if (i>greater_index) {
+                mutated_array[i] = genotype[i];
+            }
+            else {
+                mutated_array[i] = scrambled_array[j];
+                j++;
+            }
+        }
     	
-        // END OF YOUR CODE
-    	
-        return genotype;
+        return mutated_array;
     }
     
     // ************ DO NOT EDIT OR DELETE THE METHOD BELOW! *******************
